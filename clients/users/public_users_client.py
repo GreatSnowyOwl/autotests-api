@@ -4,48 +4,22 @@ import httpx
 
 from ..api_client import APIClient
 from ..public_http_builder import get_public_http_client
-
-class User(TypedDict):
-    """
-    Описание структуры пользователя.
-    """
-    id: str
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
-
-
-class UserCreateData(TypedDict):
-    """Тип данных для создания пользователя."""
-    email: str
-    password: str
-    lastName: str
-    firstName: str
-    middleName: str
-
-# Добавили описание структуры ответа создания пользователя
-class CreateUserResponseDict(TypedDict):
-    """
-    Описание структуры ответа создания пользователя.
-    """
-    user: User
-
+from ..users.users_schema import CreateUserRequestSchema, CreateUserResponseSchema, UserSchema , GetUserResponseSchema , GetUserQuerySchema
 
 class PublicUsersClient(APIClient):
     def __init__(self, client: httpx.Client):
         super().__init__(client)
 
-    def create_user_api(self, data: UserCreateData) -> httpx.Response:
+    def create_user_api(self, data: CreateUserRequestSchema) -> httpx.Response:
         """
         Создает пользователя в API.
         """
-        return self.post("/api/v1/users", json=data)
+        return self.post("/api/v1/users", json=data.model_dump(by_alias=True))
 
   # Добавили новый метод
-    def create_user(self, request: UserCreateData) -> User:
+    def create_user(self, request: CreateUserRequestSchema) -> CreateUserResponseSchema:
         response = self.create_user_api(request)
-        return response.json()
+        return CreateUserResponseSchema.model_validate_json(response.text)
 
 
 def get_public_users_client() -> PublicUsersClient:

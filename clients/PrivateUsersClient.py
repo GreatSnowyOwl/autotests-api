@@ -4,36 +4,8 @@ from httpx import Response
 
 from clients.api_client import APIClient
 from clients.users.private_http_builder import get_private_http_client, AuthenticationUserDict
-
-
-class User(TypedDict):
-    """
-    Описание структуры пользователя.
-    """
-    id: str
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
-
-# Добавили описание структуры ответа получения пользователя
-class GetUserResponseDict(TypedDict):
-    """
-    Описание структуры ответа получения пользователя.
-    """
-    user: User
-
-
-
-class UpdateUserRequestDict(TypedDict):
-    """
-    Описание структуры запроса на обновление пользователя.
-    """
-    email: str | None
-    lastName: str | None
-    firstName: str | None
-    middleName: str | None
-
+from clients.auth.authentication_schema import AuthenticationUserSchema
+from clients.users.users_schema import UpdateUserRequestSchema
 
 class PrivateUsersClient(APIClient):
     """
@@ -57,7 +29,7 @@ class PrivateUsersClient(APIClient):
         """
         return self.get(f"/api/v1/users/{user_id}")
 
-    def update_user_api(self, user_id: str, request: UpdateUserRequestDict) -> Response:
+    def update_user_api(self, user_id: str, request: UpdateUserRequestSchema) -> Response:
         """
         Метод обновления пользователя по идентификатору.
 
@@ -78,7 +50,7 @@ class PrivateUsersClient(APIClient):
 
 
 # Добавляем builder для PrivateUsersClient
-def get_private_users_client(user: AuthenticationUserDict) -> PrivateUsersClient:
+def get_private_users_client(user: AuthenticationUserSchema) -> PrivateUsersClient:
     """
     Функция создаёт экземпляр PrivateUsersClient с уже настроенным HTTP-клиентом.
 
