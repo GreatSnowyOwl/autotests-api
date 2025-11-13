@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict
 from clients.files.files_schema import FileSchema
 from clients.users.users_schema import UserSchema
 
@@ -10,24 +10,26 @@ class ExerciseSchema(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
     id: str
     title: str
-    courseId: str
-    maxScore: int
-    minScore: int
-    orderIndex: int
+    course_id: str = Field(alias="courseId")
+    max_score: int = Field(alias="maxScore")
+    min_score: int = Field(alias="minScore")
+    order_index: int = Field(alias="orderIndex")
     description: str
-    estimatedTime: str
+    estimated_time: str = Field(alias="estimatedTime")
 
 class GetExercisesQuerySchema(BaseModel):
     """
     Описание структуры запроса на получение списка упражнений.
     """
-    courseId: str
+    model_config = ConfigDict(populate_by_name=True)
+    course_id: str = Field(alias="courseId")
 
 class ExerciseInfoRequestSchema(BaseModel):
     """
     Описание структуры запроса на получение информации о задании по exercise_id.
     """
-    exerciseId: str
+    model_config = ConfigDict(populate_by_name=True)
+    exercise_id: str = Field(alias="exerciseId")
 
 class CreateExerciseRequestSchema(BaseModel):
     """
@@ -35,15 +37,12 @@ class CreateExerciseRequestSchema(BaseModel):
     """
     model_config = ConfigDict(populate_by_name=True)
     title: str
-    courseId: str
-    maxScore: int
-    minScore: int
-    orderIndex: int
+    course_id: str = Field(alias="courseId")
+    max_score: int = Field(alias="maxScore")
+    min_score: int = Field(alias="minScore")
+    order_index: int = Field(alias="orderIndex")
     description: str
-    estimatedTime: str
-
-
-
+    estimated_time: str = Field(alias="estimatedTime")
 
 
 class UpdateExerciseRequestSchema(BaseModel):
@@ -51,12 +50,12 @@ class UpdateExerciseRequestSchema(BaseModel):
     Описание структуры запроса на обновление упражнения.
     """
     model_config = ConfigDict(populate_by_name=True)
-    title: str | None
-    maxScore: int | None
-    minScore: int | None
-    orderIndex: int | None
-    description: str | None
-    estimatedTime: str | None
+    title: str | None = None
+    max_score: int | None = Field(default=None, alias="maxScore")
+    min_score: int | None = Field(default=None, alias="minScore")
+    order_index: int | None = Field(default=None, alias="orderIndex")
+    description: str | None = None
+    estimated_time: str | None = Field(default=None, alias="estimatedTime")
 
 class GetExercisesResponseSchema(BaseModel):
     """

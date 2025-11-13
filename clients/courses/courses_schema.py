@@ -1,48 +1,65 @@
-from pydantic import BaseModel, constr, ConfigDict
+from pydantic import BaseModel, Field, constr, ConfigDict
 from clients.files.files_schema import FileSchema
 from clients.users.users_schema import UserSchema
 
 
-
 class CourseSchema(BaseModel):
+    """
+    Описание структуры курса.
+    """
     model_config = ConfigDict(populate_by_name=True)
     id: str
     title: constr(min_length=1, max_length=100)
-    maxScore: int
-    minScore: int
+    max_score: int = Field(alias="maxScore")
+    min_score: int = Field(alias="minScore")
     description: constr(min_length=1, max_length=1000)
-    estimatedTime: constr(min_length=1, max_length=100)
-    previewFile: FileSchema
-    createdByUser: UserSchema
+    estimated_time: constr(min_length=1, max_length=100) = Field(alias="estimatedTime")
+    preview_file: FileSchema = Field(alias="previewFile")
+    created_by_user: UserSchema = Field(alias="createdByUser")
 
 
 class CreateCourseRequestSchema(BaseModel):
+    """
+    Описание структуры запроса на создание курса.
+    """
     model_config = ConfigDict(populate_by_name=True)
     title: constr(min_length=1, max_length=100)
-    maxScore: int
-    minScore: int
+    max_score: int = Field(alias="maxScore")
+    min_score: int = Field(alias="minScore")
     description: constr(min_length=1, max_length=1000)
-    estimatedTime: constr(min_length=1, max_length=100)
-    previewFileId: str
-    createdByUserId: str
+    estimated_time: constr(min_length=1, max_length=100) = Field(alias="estimatedTime")
+    preview_file_id: str = Field(alias="previewFileId")
+    created_by_user_id: str = Field(alias="createdByUserId")
 
 
 class CreateCourseResponseSchema(BaseModel):
+    """
+    Описание структуры ответа создания курса.
+    """
     model_config = ConfigDict(populate_by_name=True)
     course: CourseSchema
 
 class GetCoursesQuerySchema(BaseModel):
+    """
+    Описание структуры запроса получения списка курсов.
+    """
     model_config = ConfigDict(populate_by_name=True)
-    userId: str
+    user_id: str = Field(alias="userId")
 
 class GetCoursesResponseSchema(BaseModel):
+    """
+    Описание структуры ответа получения списка курсов.
+    """
     model_config = ConfigDict(populate_by_name=True)
     courses: list[CourseSchema]
 
 class UpdateCourseRequestSchema(BaseModel):
+    """
+    Описание структуры запроса обновления курса.
+    """
     model_config = ConfigDict(populate_by_name=True)
-    title: constr(min_length=1, max_length=100) | None
-    maxScore: int | None
-    minScore: int | None
-    description: constr(min_length=1, max_length=1000) | None
-    estimatedTime: constr(min_length=1, max_length=100) | None
+    title: constr(min_length=1, max_length=100) | None = None
+    max_score: int | None = Field(default=None, alias="maxScore")
+    min_score: int | None = Field(default=None, alias="minScore")
+    description: constr(min_length=1, max_length=1000) | None = None
+    estimated_time: constr(min_length=1, max_length=100) | None = Field(default=None, alias="estimatedTime")
