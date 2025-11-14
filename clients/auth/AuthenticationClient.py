@@ -30,7 +30,7 @@ class AuthenticationClient(APIClient):
     
     def login(self, request: LoginRequestSchema) -> LoginResponseSchema:
         response = self.login_api(request)
-        return LoginResponseSchema.model_validate_json(response.text)
+        return LoginResponseSchema.model_validate(response.json())
     
 
 # Добавляем builder для AuthenticationClient

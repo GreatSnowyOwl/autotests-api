@@ -1,10 +1,7 @@
-from typing import TypedDict
-
 from httpx import Response
 
 from clients.api_client import APIClient
-from clients.users.private_http_builder import get_private_http_client, AuthenticationUserDict
-from clients.auth.authentication_schema import AuthenticationUserSchema
+from clients.users.private_http_builder import get_private_http_client, AuthenticationUserSchema
 from clients.users.users_schema import UpdateUserRequestSchema
 
 class PrivateUsersClient(APIClient):
@@ -34,10 +31,10 @@ class PrivateUsersClient(APIClient):
         Метод обновления пользователя по идентификатору.
 
         :param user_id: Идентификатор пользователя.
-        :param request: Словарь с email, lastName, firstName, middleName.
+        :param request: Pydantic схема с email, lastName, firstName, middleName.
         :return: Ответ от сервера в виде объекта httpx.Response
         """
-        return self.patch(f"/api/v1/users/{user_id}", json=request)
+        return self.patch(f"/api/v1/users/{user_id}", json=request.model_dump(by_alias=True))
 
     def delete_user_api(self, user_id: str) -> Response:
         """
