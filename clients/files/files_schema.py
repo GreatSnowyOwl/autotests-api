@@ -1,5 +1,5 @@
-from pydantic import BaseModel, HttpUrl, ConfigDict
-
+from pydantic import BaseModel, HttpUrl, ConfigDict, Field
+from tools.fakers import fake
 
 class FileSchema(BaseModel):
     """
@@ -16,9 +16,11 @@ class CreateFileRequestSchema(BaseModel):
     """
     Описание структуры запроса на создание файла.
     """
-    filename: str
-    directory: str
-    upload_file: str
+    model_config = ConfigDict(populate_by_name=True)
+
+    filename: str = Field(default_factory=lambda: f"{fake.uuid4()}.png")
+    directory: str = Field(default="tests")
+    upload_file: str = Field(alias="uploadFile")
 
 
 class CreateFileResponseSchema(BaseModel):
