@@ -8,9 +8,10 @@ from clients.users.users_schema import CreateUserRequestSchema
 from clients.users.users_schema import CreateUserResponseSchema
 from clients.auth.authentication_schema import LoginResponseSchema
 from http import HTTPStatus
+import pytest
 
-
-
+@pytest.mark.authentication
+@pytest.mark.regression
 def test_login():
     public_users_client = get_public_users_client()
 
