@@ -3,8 +3,8 @@ from pydantic import BaseModel
 
 from clients.courses.CoursesClient import CoursesClient, get_courses_client
 from clients.courses.courses_schema import CreateCourseRequestSchema, CreateCourseResponseSchema
-from conftest import FileFixture
-from conftest import UserFixture
+from fixtures.files import FileFixture
+from fixtures.users import UserFixture
 
 
 class CourseFixture(BaseModel):
