@@ -63,3 +63,12 @@ class UpdateCourseRequestSchema(BaseModel):
     min_score: int | None = Field(alias="minScore", default_factory=fake.min_score)
     description: constr(min_length=1, max_length=1000) = Field(default_factory=fake.text)
     estimated_time: constr(min_length=1, max_length=100) = Field(default_factory=fake.estimated_time, alias="estimatedTime")
+
+
+class UpdateCourseResponseSchema(BaseModel):
+    """
+    Описание структуры ответа обновления курса.
+    """
+    model_config = ConfigDict(populate_by_name=True)
+    course: CourseSchema
+

@@ -31,13 +31,14 @@ def assert_user(actual_user: UserSchema, expected_user: UserSchema):
     assert_equal(actual_user.first_name, expected_user.first_name, "first_name")
     assert_equal(actual_user.middle_name, expected_user.middle_name, "middle_name")
 
-def assert_get_user_response(create_user_response: CreateUserResponseSchema, get_user_response: GetUserResponseSchema):
+def assert_get_user_response(get_user_response: GetUserResponseSchema, create_user_response: CreateUserResponseSchema):
     """
-    Проверяет, что ответ на получение пользователя соответствует запросу.
+    Проверяет, что данные пользователя при создании и при запросе совпадают.
 
-    :param create_user_response: Ответ на создание пользователя.
-    :param get_user_response: Ответ на получение пользователя.
+    :param get_user_response: Ответ API при запросе пользователя (GET).
+    :param create_user_response: Ответ API при создании пользователя (POST).
     :raises AssertionError: Если данные не совпадают.
     """
     assert_user(get_user_response.user, create_user_response.user)
+
 

@@ -111,6 +111,12 @@ class Fake:
         :return: Случайный балл.
         """
         return self.integer(1, 30)
+        
+    def refresh_token(self) -> str:
+        """
+        Генерирует случайный refresh token (UUID4).
+        """
+        return self.uuid4()
 
 
 # Создаем экземпляр класса Fake с использованием Faker
