@@ -58,7 +58,6 @@ class TestCourses:
             self,
             courses_client: CoursesClient,
             function_user: UserFixture,
-            function_course: CourseFixture,
             function_file: FileFixture
     ):
         # Формируем данные для создания курса
