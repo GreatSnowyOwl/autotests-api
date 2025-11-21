@@ -12,7 +12,7 @@ from fixtures.exercises import ExerciseFixture
 @pytest.mark.regression
 class TestExercises:
     def test_create_exercise(self, exercises_client: ExercisesClient, function_course: CourseFixture):
-    
+        """Проверяет успешное создание упражнения через POST /api/v1/exercises."""
         request = CreateExerciseRequestSchema()
         request.course_id = function_course.response.course.id
         response= exercises_client.create_exercise_api(request)
