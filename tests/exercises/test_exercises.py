@@ -11,7 +11,7 @@ from fixtures.exercises import ExerciseFixture
 @pytest.mark.exercises
 @pytest.mark.regression
 class TestExercises:
-    def test_create_exercise(self, exercises_client: ExercisesClient, function_course: CourseFixture, function_exercise: ExerciseFixture):
+    def test_create_exercise(self, exercises_client: ExercisesClient, function_course: CourseFixture):
     
         request = CreateExerciseRequestSchema()
         request.course_id = function_course.response.course.id
