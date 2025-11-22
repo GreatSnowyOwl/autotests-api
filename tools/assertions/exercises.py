@@ -2,6 +2,8 @@ from tools.assertions.base import assert_equal
 from clients.exercises.exercises_schema import CreateExerciseRequestSchema, CreateExerciseResponseSchema
 from tools.assertions.base import assert_length
 from clients.exercises.exercises_schema import GetExercisesResponseSchema , ExerciseSchema, UpdateExerciseRequestSchema, UpdateExerciseResponseSchema
+from tools.assertions.errors import assert_internal_error_response
+from clients.errors_schema import InternalErrorResponseSchema
 
 def assert_create_exercise_response(
     create_exercise_request: CreateExerciseRequestSchema,
@@ -56,3 +58,10 @@ def assert_update_exercise_response(
     assert_equal(update_exercise_response.exercise.min_score, update_exercise_request.min_score, "min_score")
     assert_equal(update_exercise_response.exercise.description, update_exercise_request.description, "description")
     assert_equal(update_exercise_response.exercise.estimated_time, update_exercise_request.estimated_time, "estimated_time")
+
+def assert_exercise_not_found_response(actual: InternalErrorResponseSchema):
+    """
+    Проверяет, что ответ на получение информации о упражнении не найден.
+    """
+    expected = InternalErrorResponseSchema(details="Exercise not found")
+    assert_internal_error_response(actual, expected)
