@@ -51,11 +51,11 @@ class UpdateExerciseRequestSchema(BaseModel):
     Описание структуры запроса на обновление упражнения.
     """
     model_config = ConfigDict(populate_by_name=True)
-    title: str | None = None
+    title: str | None = Field(default_factory=fake.sentence)  
     max_score: int | None = Field(default_factory=fake.max_score, alias="maxScore")
     min_score: int | None = Field(default_factory=fake.min_score, alias="minScore")
     order_index: int | None = Field(default_factory=lambda: fake.integer(1, 10), alias="orderIndex")
-    description: str | None = None
+    description: str | None = Field(default_factory=fake.sentence)  
     estimated_time: str | None = Field(default_factory=fake.estimated_time, alias="estimatedTime")
 
 class GetExercisesResponseSchema(BaseModel):

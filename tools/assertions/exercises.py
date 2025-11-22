@@ -1,7 +1,7 @@
 from tools.assertions.base import assert_equal
 from clients.exercises.exercises_schema import CreateExerciseRequestSchema, CreateExerciseResponseSchema
 from tools.assertions.base import assert_length
-from clients.exercises.exercises_schema import GetExercisesResponseSchema , ExerciseSchema
+from clients.exercises.exercises_schema import GetExercisesResponseSchema , ExerciseSchema, UpdateExerciseRequestSchema, UpdateExerciseResponseSchema
 
 def assert_create_exercise_response(
     create_exercise_request: CreateExerciseRequestSchema,
@@ -43,3 +43,16 @@ def assert_get_exercises_response(
     assert_length(get_exercises_response.exercises, create_exercise_responses, "exercises")
     for index, create_exercise_response in enumerate(create_exercise_responses):
         assert_exercise(get_exercises_response.exercises[index], create_exercise_response.exercise)
+
+def assert_update_exercise_response(
+    update_exercise_request: UpdateExerciseRequestSchema,
+    update_exercise_response: UpdateExerciseResponseSchema
+):
+    """
+    Проверяет, что ответ на обновление упражнения соответствует запросу.
+    """
+    assert_equal(update_exercise_response.exercise.title, update_exercise_request.title, "title")
+    assert_equal(update_exercise_response.exercise.max_score, update_exercise_request.max_score, "max_score")
+    assert_equal(update_exercise_response.exercise.min_score, update_exercise_request.min_score, "min_score")
+    assert_equal(update_exercise_response.exercise.description, update_exercise_request.description, "description")
+    assert_equal(update_exercise_response.exercise.estimated_time, update_exercise_request.estimated_time, "estimated_time")
