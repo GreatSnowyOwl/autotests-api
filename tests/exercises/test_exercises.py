@@ -56,3 +56,12 @@ class TestExercises:
         assert_status_code(response2.status_code, HTTPStatus.NOT_FOUND)
         assert_exercise_not_found_response(response_data2)
         validate_json_schema(response2.json(), response_data2.model_json_schema())
+    
+    def test_get_exercises(self, exercises_client: ExercisesClient, function_course: CourseFixture, function_exercise: ExerciseFixture):
+        """Проверяет успешное получение информации о задании по exercise_id через GET /api/v1/exercises/{exercise_id}."""
+        request = GetExercisesQuerySchema(course_id=function_course.response.course.id, exercise_id=function_exercise.response.exercise.id)
+        response = exercises_client.get_exercises_api(request)
+        response_data = GetExercisesResponseSchema.model_validate_json(response.text)
+        assert_status_code(response.status_code, HTTPStatus.OK)
+        assert_get_exercises_response(response_data, [function_exercise.response])
+        validate_json_schema(response.json(), response_data.model_json_schema())
