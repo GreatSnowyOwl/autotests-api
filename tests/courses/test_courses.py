@@ -12,11 +12,28 @@ from fixtures.files import FileFixture, function_file
 from fixtures.users import UserFixture, function_user
 from tools.assertions.courses import assert_create_course_response
 from tools.assertions.courses import assert_get_courses_response, assert_create_course_response
+from tools.epics import AllureEpic
+from tools.features import AllureFeature
+from tools.stories import AllureStory
+from tools.tags import AllureTag
+from allure_commons.types import Severity
+import allure
 
 
 @pytest.mark.courses
 @pytest.mark.regression
+@allure.tag(AllureTag.COURSES, AllureTag.REGRESSION)
+@allure.epic(AllureEpic.LMS)  # Добавили epic
+@allure.feature(AllureFeature.COURSES)  # Добавили feature
+@allure.severity(Severity.CRITICAL)
+@allure.parent_suite(AllureEpic.LMS)
+@allure.suite(AllureFeature.COURSES)
 class TestCourses:
+    @allure.tag(AllureTag.UPDATE_ENTITY)
+    @allure.story(AllureStory.UPDATE_ENTITY)  
+    @allure.title("Update course")
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.UPDATE_ENTITY)
     def test_update_course(self, courses_client: CoursesClient, function_course: CourseFixture):
         # Формируем данные для обновления
         request = UpdateCourseRequestSchema()
@@ -33,6 +50,12 @@ class TestCourses:
         # Валидируем JSON-схему ответа
         validate_json_schema(response.json(), response_data.model_json_schema())
 
+
+    @allure.tag(AllureTag.GET_ENTITIES)
+    @allure.story(AllureStory.GET_ENTITIES)
+    @allure.title("Get courses")
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.GET_ENTITIES)
     def test_get_courses(
             self,
             courses_client: CoursesClient,
@@ -53,7 +76,12 @@ class TestCourses:
         
         # Проверяем соответствие JSON-ответа схеме
         validate_json_schema(response.json(), response_data.model_json_schema())
-    
+
+    @allure.tag(AllureTag.CREATE_ENTITY)
+    @allure.story(AllureStory.CREATE_ENTITY)  # Добавили story
+    @allure.title("Create course")
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.CREATE_ENTITY)
     def test_create_course(
             self,
             courses_client: CoursesClient,

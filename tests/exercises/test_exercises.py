@@ -12,11 +12,27 @@ from clients.exercises.exercises_schema import GetExercisesQuerySchema, GetExerc
 from tools.assertions.exercises import assert_get_exercises_response
 from tools.assertions.exercises import assert_exercise_not_found_response
 from clients.errors_schema import InternalErrorResponseSchema
-
+from tools.epics import AllureEpic
+from tools.features import AllureFeature
+from tools.stories import AllureStory
+from allure_commons.types import Severity
+import allure
+from tools.tags import AllureTag
 
 @pytest.mark.exercises
 @pytest.mark.regression
+@allure.epic(AllureEpic.LMS)
+@allure.feature(AllureFeature.EXERCISES)
+@allure.story(AllureStory.CREATE_ENTITY)
+@allure.severity(Severity.CRITICAL)
+@allure.parent_suite(AllureEpic.LMS)
+@allure.suite(AllureFeature.EXERCISES)
 class TestExercises:
+    @allure.tag(AllureTag.CREATE_ENTITY)
+    @allure.story(AllureStory.CREATE_ENTITY)
+    @allure.title("Create exercise")
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.CREATE_ENTITY)
     def test_create_exercise(self, exercises_client: ExercisesClient, function_course: CourseFixture):
         """Проверяет успешное создание упражнения через POST /api/v1/exercises."""
         request = CreateExerciseRequestSchema()
@@ -28,6 +44,13 @@ class TestExercises:
         validate_json_schema(response.json(), response_data.model_json_schema())
 
 
+
+
+    @allure.tag(AllureTag.GET_ENTITY)
+    @allure.title("Get exercise")
+    @allure.story(AllureStory.GET_ENTITY)
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.GET_ENTITY)
     def test_get_exercises(self, exercises_client: ExercisesClient, function_course: CourseFixture, function_exercise: ExerciseFixture):
         """Проверяет успешное получение списка упражнений через GET /api/v1/exercises."""
         request = GetExercisesQuerySchema(exercise_id=function_exercise.response.exercise.id, course_id=function_course.response.course.id)
@@ -37,6 +60,11 @@ class TestExercises:
         assert_get_exercises_response(response_data, [function_exercise.response])
         validate_json_schema(response.json(), response_data.model_json_schema())
     
+    @allure.tag(AllureTag.UPDATE_ENTITY)
+    @allure.title("Update exercise")
+    @allure.story(AllureStory.UPDATE_ENTITY)
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.UPDATE_ENTITY)
     def test_update_exercise(self, exercises_client: ExercisesClient, function_course: CourseFixture, function_exercise: ExerciseFixture):
         """Проверяет успешное обновление упражнения через PATCH /api/v1/exercises/{exercise_id}."""
         request = UpdateExerciseRequestSchema()
@@ -46,6 +74,11 @@ class TestExercises:
         assert_update_exercise_response(request, response_data)
         validate_json_schema(response.json(), response_data.model_json_schema())
 
+    @allure.tag(AllureTag.DELETE_ENTITY)
+    @allure.title("Delete exercise")
+    @allure.story(AllureStory.DELETE_ENTITY)
+    @allure.severity(Severity.CRITICAL)
+    @allure.sub_suite(AllureStory.DELETE_ENTITY)
     def test_delete_exercise(self, exercises_client: ExercisesClient, function_course: CourseFixture, function_exercise: ExerciseFixture):
         """Проверяет успешное удаление упражнения через DELETE /api/v1/exercises/{exercise_id}."""
         response = exercises_client.delete_exercise_api(exercise_id=function_exercise.response.exercise.id)
@@ -56,7 +89,13 @@ class TestExercises:
         assert_status_code(response2.status_code, HTTPStatus.NOT_FOUND)
         assert_exercise_not_found_response(response_data2)
         validate_json_schema(response2.json(), response_data2.model_json_schema())
-    
+
+
+    @allure.tag(AllureTag.GET_ENTITIES)
+    @allure.story(AllureStory.GET_ENTITIES)
+    @allure.title("Get exercises")
+    @allure.severity(Severity.BLOCKER)
+    @allure.sub_suite(AllureStory.GET_ENTITIES)
     def test_get_exercises(self, exercises_client: ExercisesClient, function_course: CourseFixture, function_exercise: ExerciseFixture):
         """Проверяет успешное получение информации о задании по exercise_id через GET /api/v1/exercises/{exercise_id}."""
         request = GetExercisesQuerySchema(course_id=function_course.response.course.id, exercise_id=function_exercise.response.exercise.id)

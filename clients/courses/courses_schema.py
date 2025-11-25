@@ -58,7 +58,7 @@ class UpdateCourseRequestSchema(BaseModel):
     Описание структуры запроса обновления курса.
     """
     model_config = ConfigDict(populate_by_name=True)
-    title: constr(min_length=1, max_length=100)
+    title: constr(min_length=1, max_length=100) = Field(default_factory=fake.sentence)
     max_score: int | None = Field(alias="maxScore", default_factory=fake.max_score)
     min_score: int | None = Field(alias="minScore", default_factory=fake.min_score)
     description: constr(min_length=1, max_length=1000) = Field(default_factory=fake.text)

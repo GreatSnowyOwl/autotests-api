@@ -9,23 +9,48 @@ from clients.users.users_schema import CreateUserResponseSchema
 from clients.auth.authentication_schema import LoginResponseSchema
 from http import HTTPStatus
 import pytest
+from tools.tags import AllureTag
+from tools.epics import AllureEpic
+from tools.features import AllureFeature
+from allure_commons.types import Severity
+import allure
+from tools.stories import AllureStory
 
 @pytest.mark.authentication
 @pytest.mark.regression
-def test_login():
-    public_users_client = get_public_users_client()
+@allure.tag(AllureTag.REGRESSION, AllureTag.AUTHENTICATION)
+@allure.epic(AllureEpic.LMS)  # Добавили epic
+@allure.feature(AllureFeature.AUTHENTICATION)  # Добавили feature
+@allure.severity(Severity.CRITICAL)
+@allure.parent_suite(AllureEpic.LMS)
+@allure.suite(AllureFeature.AUTHENTICATION)
+class TestAuthentication:
+    @allure.story(AllureStory.LOGIN)  # Добавили story
+    @allure.title("Login with correct email and password")
+    @allure.sub_suite(AllureStory.LOGIN)
+    def test_login(self):
+        """
+        Проверяет успешную авторизацию пользователя.
 
-    create_user_request = CreateUserRequestSchema()
-    create_user_response = public_users_client.create_user_api(create_user_request)
-    response_data = CreateUserResponseSchema.model_validate_json(create_user_response.text)
+        :raises AssertionError: Если какое-либо из условий не выполняется.
+        """
+        public_users_client = get_public_users_client()
+        create_user_request = CreateUserRequestSchema()
+        create_user_response = public_users_client.create_user_api(create_user_request)
+        response_data = CreateUserResponseSchema.model_validate_json(create_user_response.text)
 
-    authentication_client = get_authentication_client()
+        authentication_client = get_authentication_client()
 
-    login_request = LoginRequestSchema(email=response_data.user.email, password=create_user_request.password)
-    login_response = authentication_client.login_api(login_request)
-    login_response_data = LoginResponseSchema.model_validate_json(login_response.text)
+        login_request = LoginRequestSchema(email=response_data.user.email, password=create_user_request.password)
+        login_response = authentication_client.login_api(login_request)
+        login_response_data = LoginResponseSchema.model_validate_json(login_response.text)
+        assert_status_code(login_response.status_code, HTTPStatus.OK)
+        assert_login_response(login_response_data)
+        validate_json_schema(login_response.json(), LoginResponseSchema.model_json_schema())
+
+        login_response_data = LoginResponseSchema.model_validate_json(login_response.text)
    
-    assert_status_code(login_response.status_code, HTTPStatus.OK)
-    assert_login_response(login_response_data)
-    validate_json_schema(login_response.json(), LoginResponseSchema.model_json_schema())
+        assert_status_code(login_response.status_code, HTTPStatus.OK)
+        assert_login_response(login_response_data)
+        validate_json_schema(login_response.json(), LoginResponseSchema.model_json_schema())
     

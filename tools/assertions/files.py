@@ -3,6 +3,8 @@ from tools.assertions.base import assert_equal
 from clients.errors_schema import ValidationErrorResponseSchema
 from clients.errors_schema import ValidationErrorSchema
 from tools.assertions.errors import assert_validation_error_response
+from clients.files.files_schema import FileSchema
+
 
 def assert_create_file_response(request: CreateFileRequestSchema, response: CreateFileResponseSchema):
     """
@@ -35,3 +37,16 @@ def assert_get_file_with_incorrect_file_id_response(actual: ValidationErrorRespo
         ]
     )
     assert_validation_error_response(actual, expected)
+
+def assert_file(actual: FileSchema, expected: FileSchema):
+    """
+    Проверяет, что фактические данные файла соответствуют ожидаемым.
+
+    :param actual: Фактические данные файла.
+    :param expected: Ожидаемые данные файла.
+    :raises AssertionError: Если хотя бы одно поле не совпадает.
+    """
+    assert_equal(actual.id, expected.id, "id")
+    assert_equal(actual.url, expected.url, "url")
+    assert_equal(actual.filename, expected.filename, "filename")
+    assert_equal(actual.directory, expected.directory, "directory")
