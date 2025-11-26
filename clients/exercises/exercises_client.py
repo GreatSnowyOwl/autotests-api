@@ -1,7 +1,8 @@
 from typing import TypedDict
 
 from httpx import Response, Headers
-
+from allure import step
+import allure
 from clients.api_client import APIClient
 
 from clients.users.private_http_builder import AuthenticationUserSchema, get_private_http_client
@@ -13,7 +14,7 @@ class ExercisesClient(APIClient):
     """
     Клиент для работы с /api/v1/exercises
     """
-
+    @allure.step("Get exercises")
     def get_exercises_api(self, query: GetExercisesQuerySchema) -> Response:
         """
         Метод получения списка упражнений.
@@ -23,6 +24,7 @@ class ExercisesClient(APIClient):
         """
         return self.get("/api/v1/exercises", params=query.model_dump(by_alias=True))
 
+    @allure.step("Get exercise info by id {exercise_id}")
     def get_exercise_info_api(self, request: ExerciseInfoRequestSchema, headers: Headers | dict | None = None) -> Response:
         """
         Метод получения информации о задании по exercise_id.
@@ -30,10 +32,11 @@ class ExercisesClient(APIClient):
         :param query: Словарь с exerciseId.
         :return: Ответ от сервера в виде объекта httpx.Response
         """
-        # Убираем json=..., так как GET не поддерживает тело запроса в вашем клиенте
+    
         return self.get(f"/api/v1/exercises/{request.exercise_id}", headers=headers)
 
 
+    @allure.step("Create exercise API")
     def create_exercise_api(self, request: CreateExerciseRequestSchema, headers: Headers | dict | None = None) -> Response:
         """
         Метод создания упражнения.
@@ -44,6 +47,7 @@ class ExercisesClient(APIClient):
         """
         return self.post("/api/v1/exercises", json=request.model_dump(by_alias=True), headers=headers)
 
+    @allure.step("Update exercise by id {exercise_id}")
     def update_exercise_api(self, exercise_id: str, request: UpdateExerciseRequestSchema, headers: Headers | dict | None = None) -> Response:
         """
         Метод обновления упражнения.
@@ -55,6 +59,7 @@ class ExercisesClient(APIClient):
         """
         return self.patch(f"/api/v1/exercises/{exercise_id}", json=request.model_dump(by_alias=True), headers=headers)
 
+    @allure.step("Delete exercise by id {exercise_id}")
     def delete_exercise_api(self, exercise_id: str, headers: Headers | dict | None = None) -> Response:
         """
         Метод удаления упражнения.
